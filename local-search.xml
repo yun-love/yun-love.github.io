@@ -4,9 +4,22 @@
   
   
   <entry>
+    <title>Hello World</title>
+    <link href="/2025/04/03/hello-world/"/>
+    <url>/2025/04/03/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>项目清单</title>
-    <link href="/2025/03/21/01/"/>
-    <url>/2025/03/21/01/</url>
+    <link href="/2025/04/03/01/"/>
+    <url>/2025/04/03/01/</url>
     
     <content type="html"><![CDATA[<h3 id="项目清单"><a href="#项目清单" class="headerlink" title="项目清单"></a>项目清单</h3><ol><li>moemail<br><a href="https://wenhu.us.kg/">https://wenhu.us.kg</a></li><li>gemini多模态应用<br><a href="https://yun-love-gemini-play.deno.dev/">https://yun-love-gemini-play.deno.dev/</a></li><li>社区应用，无服务器<br><a href="https://yun-3m3.pages.dev/">https://yun-3m3.pages.dev/</a></li><li>博客（废案）<br><a href="https://yun-love.github.io/">https://yun-love.github.io/</a></li><li>ai绘画<br><a href="https://ai.wenhu.us.kg/">https://ai.wenhu.us.kg/</a></li><li>free-flux<br><a href="https://free-flux.wenhu.is.kg/">https://free-flux.wenhu.is.kg</a></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">AIzaSyD1NdsH-COcWpG13vMyToY_3y6fvM-gD4E<br></code></pre></td></tr></table></figure><p>US.kg挂了</p>]]></content>
     
@@ -17,11 +30,11 @@
   
   
   <entry>
-    <title>学生看手机事件</title>
-    <link href="/2025/03/09/02/"/>
-    <url>/2025/03/09/02/</url>
+    <title>如何学习英语</title>
+    <link href="/2025/04/03/02/"/>
+    <url>/2025/04/03/02/</url>
     
-    <content type="html"><![CDATA[<h3 id="农民"><a href="#农民" class="headerlink" title="农民"></a>农民</h3>]]></content>
+    <content type="html"><![CDATA[<h3 id="一-心态的调整"><a href="#一-心态的调整" class="headerlink" title="一.心态的调整"></a>一.心态的调整</h3><p>   你要认识到你已经不是小孩子了。从今天算起你距离中考还剩七十来天，你接下来的选择决定了你是要上一中还是二中，乃至三中四中，更甚至是成名。所以想要学习好这一门课程心态是至关重要的，即便你什么都不会，你也要有<strong>我能学会</strong>的信心。</p><h3 id="二-基础知识"><a href="#二-基础知识" class="headerlink" title="二.基础知识"></a>二.基础知识</h3><ol><li>音标<br>学习英语的最重要的的就是读，你如果连读都不会，那么就不可能学会乃至学好英语。下面是一些例子，可供参考。<iframe   width="300"   height="200"   src="https://b23.tv/vNqCEtG"   frameborder="0"   allowfullscreen></iframe></li><li>拆分单词<br>根据读音将单词拆分成一个个音节，这有利于单词的记忆。<br>如： <strong>make</strong> 可以拆分成 <strong>ma</strong>—“妹” <strong>ke</strong>—“可” 这里要注意，在英语中，单词末尾的e通常不发音。</li></ol>]]></content>
     
     
     
@@ -30,11 +43,11 @@
   
   
   <entry>
-    <title>Hello World</title>
-    <link href="/2025/03/09/hello-world/"/>
-    <url>/2025/03/09/hello-world/</url>
+    <title></title>
+    <link href="/2025/04/03/03/"/>
+    <url>/2025/04/03/03/</url>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    <content type="html"><![CDATA[<hr><h2 id="title-微信机器人配置"><a href="#title-微信机器人配置" class="headerlink" title="title:微信机器人配置"></a>title:微信机器人配置</h2><h1 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h1><p>pip install flask requests</p><h1 id="API模式运行"><a href="#API模式运行" class="headerlink" title="API模式运行"></a>API模式运行</h1><p>python bot.py –api</p><h1 id="命令行模式运行"><a href="#命令行模式运行" class="headerlink" title="命令行模式运行"></a>命令行模式运行</h1><p>python bot.py –cli</p>]]></content>
     
     
     
