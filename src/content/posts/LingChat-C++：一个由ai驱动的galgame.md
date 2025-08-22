@@ -4,7 +4,7 @@ published: 2025-08-21
 description: ''
 image: ''
 tags: [C++, termux, esay, AI, LingChat]
-category: ''
+category: 'guides'
 draft: false 
 lang: ''
 ---
