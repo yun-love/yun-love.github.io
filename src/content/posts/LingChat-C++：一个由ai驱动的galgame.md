@@ -64,7 +64,7 @@ aarch64-linux-android-clang++ -L/data/data/com.termux/files/usr/lib build/obj/AI
 # ==================================================
 
 [Server]
-BACKEND_PORT="8765" 
+BACKEND_PORT="1234" 
 DOCUMENT_ROOT="frontend"
 
 [API_LLM]
