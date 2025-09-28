@@ -12,7 +12,7 @@ lang: ''
 ---
 ## 伴奏
 <audio controls>
-  <source src="https://pub-6ac5acfb00024c428b38dffc092cca06.r2.dev/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3" type="audio/mpeg">
+  <source src="https://adioe.wenhu.dpdns.org/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3" type="audio/mpeg">
   您的浏览器不支持音频元素。
 </audio>
 ### **Aoharu(ai填词) (简谱)**
