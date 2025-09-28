@@ -11,7 +11,8 @@ lang: ''
 好的，已为您将这份简谱重新排版。新版式优化了音符分组和歌词对齐，使其更清晰易读。
 
 ---
-
+## 伴奏
+![伴奏](https://pub-6ac5acfb00024c428b38dffc092cca06.r2.dev/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3)
 ### ** Aoharu(ai填词) (简谱)**
 
 **调号：** 1=C
