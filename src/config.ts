@@ -53,7 +53,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "https://adioe.wenhu.dpdns.org/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+	avatar: "https://r2.031312.xyz/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "yun-love",
 	bio: "无限进步",
 	links: [
