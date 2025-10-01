@@ -9,9 +9,15 @@ draft: false
 lang: 'zh-CN'
 ---
 
-## 伴奏
+{/* 1. 在文章最顶部（Frontmatter下方）引入组件，并使用正确的英文单引号 */}
 import AudioPlayer from '~/components/AudioPlayer.astro';
 
+## 伴奏
+
+
+## 伴奏
+
+{/* 2. 在您想显示播放器的地方，使用组件标签，并传入音频文件的路径 */}
 <AudioPlayer src="https://r2.031312.xyz/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3" />
 
 
