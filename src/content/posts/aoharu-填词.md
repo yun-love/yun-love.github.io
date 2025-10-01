@@ -9,17 +9,11 @@ draft: false
 lang: 'zh-CN'
 ---
 
-{/* 1. 在文章最顶部（Frontmatter下方）引入组件，并使用正确的英文单引号 */}
 import AudioPlayer from '~/components/AudioPlayer.astro';
 
 ## 伴奏
 
-
-## 伴奏
-
-{/* 2. 在您想显示播放器的地方，使用组件标签，并传入音频文件的路径 */}
-<AudioPlayer src="https://r2.031312.xyz/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3" />
-
+<AudioPlayer src="https://r2.031312.xyz/%5B%E7%A2%A7%E8%93%9D%E6%A1%A3%E6%A1%88Blue%20Archive%5D%20BGM%20Collections%EF%BC%88%E6%94%B6%E5%BD%9583%E9%A6%96%EF%BC%89%20p34%20%5BBlue%20Archive%5D%20Theme_34_Nor%2006%20-%20Aoharu%20(Story%20Opening%20BGM)_Full-HD%20%5BBV1Jh411d7kd_p34%5D.mp3" />
 
 ---
 
@@ -43,8 +37,7 @@ import AudioPlayer from '~/components/AudioPlayer.astro';
 
 #### **[Verse 1]**
 
-```
-| 5 5 6_5 3 - | 2 2 3_2 1 - | 5 5 6_5 3 - | 2 3 2_1 1 - |
+```| 5 5 6_5 3 - | 2 2 3_2 1 - | 5 5 6_5 3 - | 2 3 2_1 1 - |
  晨光 穿透 了薄雾 | 唤醒 沉睡 的脚步 | 心跳 像清 晨的鼓 | 宣告 着不 认输
 
 | 3 3 3_2 1 2 | 3 5 5 6_5 6 | 5 6_5 3 2_1 | 1 - - - |
