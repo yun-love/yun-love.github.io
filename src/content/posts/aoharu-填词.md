@@ -10,11 +10,10 @@ lang: 'zh-CN'
 ---
 
 ## 伴奏
+import AudioPlayer from '~/components/AudioPlayer.astro';
 
-<audio controls>
-  <source src="https://r2.031312.xyz/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3" type="audio/mpeg">
-  您的浏览器不支持音频元素。
-</audio>  
+<AudioPlayer src="https://r2.031312.xyz/[碧蓝档案Blue Archive] BGM Collections（收录83首） p34 [Blue Archive] Theme_34_Nor 06 - Aoharu (Story Opening BGM)_Full-HD [BV1Jh411d7kd_p34].mp3" />
+
 
 ---
 
