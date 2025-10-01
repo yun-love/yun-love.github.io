@@ -68,11 +68,11 @@ export const profileConfig: ProfileConfig = {
 			// name: "Steam",
 			// icon: "fa6-brands:steam",
 			// url: "https://store.steampowered.com",
-		},
-				{
+		// },
+		{
 			name: "Bilibili",
 			icon: "fa6-brands:bilibili",
-			url: "https://store.steampowered.com",
+			url: "https://space.bilibili.com/3493090503429024",
 		},
 
 		{
