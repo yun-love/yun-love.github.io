@@ -16,11 +16,7 @@ const { src } = Astro.props;
 <script>
   async function initializePlyr() {
     try {
-      // 动态导入 plyr 库。
       const plyrModule = await import('plyr');
-
-      // 使用 `as any` 进行类型断言，绕过静态类型检查的错误。
-      // 这告诉 TypeScript：“我知道 plyrModule 在运行时会有一个 .default 属性”。
       const Plyr = (plyrModule as any).default;
       
       if (!Plyr) {
@@ -42,7 +38,25 @@ const { src } = Astro.props;
 </script>
 
 <style is:global>
+  /* --- 默认 (亮色) 模式下的主题色 --- */
   :root {
-    --plyr-color-main: #1877F2; 
+    /* 这是播放进度条、音量条的主颜色 */
+    --plyr-color-main: #6366f1; /* 您可以替换为您网站的主题色 */
+  }
+
+  /* --- 暗色模式下的样式 --- */
+  /* 当 html 标签有 .dark 类时，以下样式生效 */
+  .dark .plyr--audio {
+    /* 播放器背景色 (例如：深灰色) */
+    --plyr-background-color: #2d3748;
+
+    /* 按钮和时间的颜色 (例如：浅灰色) */
+    --plyr-control-color: #cbd5e0;
+
+    /* 鼠标悬停在按钮上时的颜色 (例如：白色) */
+    --plyr-control-color-hover: #ffffff;
+
+    /* 时间进度条未播放部分的颜色 */
+    --plyr-range-track-background: #4a5568;
   }
 </style>
