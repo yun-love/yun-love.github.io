@@ -14,25 +14,37 @@ const { src } = Astro.props;
 </audio>
 
 <script>
-  // 错误就在下面这一行，我们来修复它
-  import Plyr from 'plyr';
-
-  // 确保这段脚本只在页面加载完成后运行
-  document.addEventListener('DOMContentLoaded', () => {
+  // 使用一个异步函数来初始化播放器
+  async function initializePlyr() {
     try {
+      // 动态导入 plyr 库。这可以避免静态检查时的模块解析问题。
+      // `(await import('plyr')).default` 是获取模块默认导出的标准方式。
+      const Plyr = (await import('plyr')).default;
+      
+      if (!Plyr) {
+        console.error("Plyr library failed to load.");
+        return;
+      }
+
+      // 寻找所有带有特定 class 的播放器元素
       const players = Array.from(document.querySelectorAll('.custom-audio-player'));
+
+      // 为每个元素初始化一个新的 Plyr 实例
       players.forEach(player => {
-        // @ts-ignore - 明确告诉 TypeScript 我们知道 Plyr 是一个构造函数
         new Plyr(player as HTMLElement);
       });
-    } catch (e) {
-      console.error("Error initializing Plyr:", e);
+    } catch (error) {
+      console.error("Error initializing Plyr:", error);
     }
-  });
+  }
+
+  // 调用函数，开始执行初始化
+  initializePlyr();
 </script>
 
 <style is:global>
   :root {
+    /* 自定义主题颜色依然有效 */
     --plyr-color-main: #1877F2; 
   }
 </style>
