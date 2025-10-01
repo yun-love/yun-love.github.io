@@ -49,6 +49,21 @@ export const navBarConfig: NavBarConfig = {
 			url: "https://github.com/yun-love/", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
 		},
+		{
+			name: "AI-img",
+			url: "https://ai-img.031312.xyz/", // Internal links should not include the base path, as it is automatically added
+			external: true, // Show an external link icon and will open in a new tab
+		},
+		{
+			name: "Mail",
+			url: "https://mail.031312.xyz/", // Internal links should not include the base path, as it is automatically added
+			external: true, // Show an external link icon and will open in a new tab
+		},
+		{
+			name: "Push",
+			url: "https://push.031312.xyz/", // Internal links should not include the base path, as it is automatically added
+			external: true, // Show an external link icon and will open in a new tab
+		},
 	],
 };
 
