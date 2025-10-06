@@ -17,7 +17,6 @@ jobs:
 
       # 第二步：安装统一的腾讯云CLI
       - name: Install Tencent Cloud CLI
-        # 修正：包名就是 tccli
         run: pip install tccli
       
       # 第三步：执行EdgeOne缓存刷新命令
@@ -27,5 +26,5 @@ jobs:
           TENCENTCLOUD_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
           TENCENTCLOUD_REGION: "ap-guangzhou"
         run: |
-          # tccli 安装后，可以直接调用 edgeone 服务
-          tccli edgeone PurgeCache --ZoneId ${{ secrets.EDGEONE_ZONE_ID }} --Type purge_all
+          # 关键修正：EdgeOne的服务名称是 "teo"
+          tccli teo PurgeCache --ZoneId ${{ secrets.EDGEONE_ZONE_ID }} --Type purge_all
