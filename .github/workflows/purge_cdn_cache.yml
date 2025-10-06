@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # 第一步：刷新 Cloudflare 缓存
+      # 通过 CLOUDFLARE_ZONE_ID 指定要刷新的站点
       - name: Purge Cloudflare Cache
         run: |
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
@@ -20,11 +21,11 @@ jobs:
         run: pip install tccli
       
       # 第三步：执行EdgeOne缓存刷新命令
+      # 通过 EDGEONE_ZONE_ID 指定要刷新的站点
       - name: Run Purge EdgeOne Cache Command
         env:
           TENCENTCLOUD_SECRET_ID: ${{ secrets.TENCENT_SECRET_ID }}
           TENCENTCLOUD_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
           TENCENTCLOUD_REGION: "ap-guangzhou"
         run: |
-          # 关键修正：EdgeOne的服务名称是 "teo"
-          tccli teo PurgeCache --ZoneId ${{ secrets.EDGEONE_ZONE_ID }} --Type purge_all
+          tccli teo CreatePurgeTask --ZoneId ${{ secrets.EDGEONE_ZONE_ID }} --Type purge_all
