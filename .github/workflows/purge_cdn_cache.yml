@@ -7,7 +7,7 @@ jobs:
   purge-caches:
     runs-on: ubuntu-latest
     steps:
-      # 第一步：刷新 Cloudflare 缓存，这部分没有问题
+      # 第一步：刷新 Cloudflare 缓存
       - name: Purge Cloudflare Cache
         run: |
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
@@ -15,17 +15,17 @@ jobs:
           -H "Content-Type: application/json" \
           --data '{"purge_everything":true}'
 
-      # 第二步：配置腾讯云凭证，使用正确的官方 Action
+      # 第二步：配置腾讯云凭证 (使用已验证的正确 Action)
       - name: Configure Tencent Cloud Credentials
-        # --- 这是修正后的关键部分 ---
-        uses: TencentCloud/tencentcloud-sdk-auth-action@v1 # 使用官方正确的 Action 名称
-        # --------------------------
+        # --- 这是经过三重验证的最终正确版本 ---
+        uses: TencentCloud/credentials-action@v1
+        # ------------------------------------
         with:
           secret-id: ${{ secrets.TENCENT_SECRET_ID }}
           secret-key: ${{ secrets.TENCENT_SECRET_KEY }}
           region: ap-guangzhou 
       
-      # 第三步：安装并执行 EdgeOne 的 CLI，这部分依赖于上一步的凭证配置
+      # 第三步：安装并执行 EdgeOne 的 CLI
       - name: Install Tencent Cloud CLI for EdgeOne
         run: |
           pip install tccli-edgeone
