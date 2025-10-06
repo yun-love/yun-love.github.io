@@ -1,0 +1,32 @@
+name: Manually Purge CDN Caches
+
+# 触发器配置：
+# 我们移除了 push 事件，只保留 workflow_dispatch，它允许我们从GitHub Actions页面手动触发。
+on:
+  workflow_dispatch:
+
+jobs:
+  purge-caches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge Cloudflare Cache
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          --data '{"purge_everything":true}'
+
+      - name: Configure Tencent Cloud Credentials
+        uses: tencentcloud/configure-creds-action@v1
+        with:
+          secret-id: ${{ secrets.TENCENT_SECRET_ID }}
+          secret-key: ${{ secrets.TENCENT_SECRET_KEY }}
+          region: ap-guangzhou 
+      
+      - name: Install Tencent Cloud CLI
+        run: |
+          pip install tccli-edgeone
+          
+      - name: Run Purge EdgeOne Cache Command
+        run: |
+          tccli edgeone PurgeCache --ZoneId ${{ secrets.EDGEONE_ZONE_ID }} --Type purge_all
