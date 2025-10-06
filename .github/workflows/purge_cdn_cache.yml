@@ -7,29 +7,25 @@ jobs:
   purge-caches:
     runs-on: ubuntu-latest
     steps:
-      # 第一步：刷新 Cloudflare 缓存
+      # 第一步：刷新 Cloudflare 缓存 (这部分一直是对的)
       - name: Purge Cloudflare Cache
         run: |
-          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFDLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
           -H "Content-Type: application/json" \
           --data '{"purge_everything":true}'
 
-      # 第二步：配置腾讯云凭证 (使用已验证的正确 Action)
-      - name: Configure Tencent Cloud Credentials
-        # --- 这是经过三重验证的最终正确版本 ---
-        uses: TencentCloud/credentials-action@v1
-        # ------------------------------------
-        with:
-          secret-id: ${{ secrets.TENCENT_SECRET_ID }}
-          secret-key: ${{ secrets.TENCENT_SECRET_KEY }}
-          region: ap-guangzhou 
-      
-      # 第三步：安装并执行 EdgeOne 的 CLI
+      # 第二步：安装腾讯云CLI
       - name: Install Tencent Cloud CLI for EdgeOne
-        run: |
-          pip install tccli-edgeone
-          
+        run: pip install tccli-edgeone
+      
+      # 第三步：执行EdgeOne缓存刷新命令，并直接注入环境变量
       - name: Run Purge EdgeOne Cache Command
+        # 关键改动：我们在这里使用 env 块，将 secrets 直接设置为 tccli 所需的环境变量。
+        # tccli 会自动读取这些环境变量来进行身份验证，这是它内置的功能。
+        env:
+          TENCENTCLOUD_SECRET_ID: ${{ secrets.TENCENT_SECRET_ID }}
+          TENCENTCLOUD_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
+          TENCENTCLOUD_REGION: "ap-guangzhou" # 默认地域，对于全局服务EdgeOne影响不大但必须要有
         run: |
           tccli edgeone PurgeCache --ZoneId ${{ secrets.EDGEONE_ZONE_ID }} --Type purge_all
