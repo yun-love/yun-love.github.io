@@ -4,7 +4,7 @@ published: 2025-10-12
 description: ''
 image: ''
 tags: []
-category: ''
+category: '教程'
 draft: false 
 lang: ''
 ---

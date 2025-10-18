@@ -40,7 +40,7 @@ mv LingChat-C--Termux chat && cd chat
 make
 ```
 完整编译日志示例：
-```info
+```txt
 ❯ make
 aarch64-linux-android-clang++ -std=c++17 -Ibackend/include -Wall  -O3 -DNDEBUG -I/data/data/com.termux/files/usr/include -MMD -MP -MF build/dep/AIEngine.d -c backend/src/AIEngine.cpp -o build/obj/AIEngine.o
 aarch64-linux-android-clang++ -std=c++17 -Ibackend/include -Wall  -O3 -DNDEBUG -I/data/data/com.termux/files/usr/include -MMD -MP -MF build/dep/ConfigManager.d -c backend/src/ConfigManager.cpp -o build/obj/ConfigManager.o
@@ -155,7 +155,7 @@ PROMPT_FILE="prompt.txt"
 make run 
 ```
 成功启动日志：
-```info
+```txt
 ❯ make run
 ======================================
              启动后台服务
