@@ -3,8 +3,8 @@ title: C++数据类型、循环语句、数组的综合实现案例
 published: 2025-10-18
 description: ''
 image: ''
-tags: [c++, 笔记]
-category: '笔记'
+tags: [c++, 笔记, 案例]
+category: '案例'
 draft: false 
 lang: ''
 ---
