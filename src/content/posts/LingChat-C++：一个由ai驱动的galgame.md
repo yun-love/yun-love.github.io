@@ -295,7 +295,7 @@ Ctrl + C
    - 确保文件名与`EmotionMap`配置完全匹配
    - 文件需放至`frontend/assets`对应子目录
 
-3. **RAG系统启用**：(**现已废弃**)
+3. **RAG系统启用**：(**现已废弃,新的RAG系统正在开发**)
    - 设置`ENABLE_RAG=true`
    - 补充配置embedding模型参数
 
