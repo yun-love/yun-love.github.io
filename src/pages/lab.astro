@@ -1,0 +1,87 @@
+---
+import MainGridLayout from '../layouts/MainGridLayout.astro'
+import { i18n } from '../i18n/translation'
+import I18nKey from '../i18n/i18nKey'
+
+// 在这里配置你的项目，包含图片链接
+const projects = [
+  {
+    name: "AI Image Tool",
+    description: "基于 cloudflare AI api 的图像生成工具，支持多种风格转换。",
+    link: "https://ai-img.031312.xyz/",
+    image: "https://openlist.031312.xyz/Screenshot%20from%202026-01-11%2020-52-59.png", // 替换为你项目的截图地址
+  },
+  {
+    name: "MoeMail",
+    description: "一个完全基于cloudflare和resend的邮局，可以收发邮件。",
+    link: "https://mail.031312.xyz",
+    image: "https://openlist.031312.xyz/Screenshot%20from%202026-01-11%2020-59-24.png",
+  },
+  {
+    name: "YUN-LOVE'S OneDriver",
+    description: "这里可以快捷分享onedriver中的文件。",
+    link: "https://one.031312.xyz",
+    image: "https://openlist.031312.xyz/Screenshot%20from%202026-01-11%2021-03-34.png",
+  },
+  {
+    name: "YUN-LOVE'S monitor",
+    description: "这是本站cdn--Edgeone的流量监控。",
+    link: "https://monitor.031312.xyz",
+    image: "https://openlist.031312.xyz/Screenshot%20from%202026-01-11%2021-02-37.png",
+  },
+  {
+    name: "MoePush",
+    description: "一个完全基于cloudflare的推送服务，可以对接tg 企微等平台。",
+    link: "https://push.031312.xyz",
+    image: "https://openlist.031312.xyz/Screenshot%20from%202026-01-11%2021-00-59.png",
+  },
+  {
+    name: "YUN-LOVE'S umami",
+    description: "这是本站博客blog.031312.xyz的umami流量监控。",
+    link: "https://umami.031312.xyz",
+    image: "https://openlist.031312.xyz/Screenshot%20from%202026-01-11%2021-05-35.png",
+  },
+];
+---
+
+<MainGridLayout title={i18n(I18nKey.lab)} relativeDir='lab'>
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 w-full">
+            <h1 class="text-3xl font-bold text-black/90 dark:text-white/90 mb-2">
+                {i18n(I18nKey.lab)}
+            </h1>
+            <div class="h-1 w-12 rounded-full bg-[var(--primary)] mb-8"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {projects.map(project => (
+                    <a href={project.link} target="_blank" 
+                       class="group flex flex-col overflow-hidden rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/10 hover:border-[var(--primary)] transition-all duration-300">
+                        
+                        <div class="aspect-video overflow-hidden border-b border-black/5 dark:border-white/5">
+                            <img 
+                                src={project.image} 
+                                alt={project.name} 
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                        </div>
+
+                        <div class="p-4">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-lg text-black/80 dark:text-white/80 group-hover:text-[var(--primary)] transition-colors">
+                                    {project.name}
+                                </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-30 group-hover:opacity-100 group-hover:text-[var(--primary)] transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </div>
+                            <p class="text-sm text-black/50 dark:text-white/50 line-clamp-2">
+                                {project.description}
+                            </p>
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </div>
+</MainGridLayout>
+

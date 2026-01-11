@@ -6,6 +6,8 @@ import type {
 	SiteConfig,
 } from "./types/config";
 import { LinkPreset } from "./types/config";
+import { i18n } from './i18n/translation'
+import i18nKey from './i18n/i18nKey'
 
 export const siteConfig: SiteConfig = {
 	title: "YUN-LOVE",
@@ -44,24 +46,15 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.Home,
 		LinkPreset.Archive,
 		LinkPreset.About,
+    {
+      name: "实验室", // 或者 '项目'
+      url: '/lab/',
+      icon: 'material-symbols:AppSettingsAltOutlined', // 推荐一个像“应用”的图标
+      external: false,
+    },
 		{
 			name: "GitHub",
 			url: "https://github.com/yun-love/", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-		{
-			name: "AI-img",
-			url: "https://ai-img.031312.xyz/", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-		{
-			name: "Mail",
-			url: "https://mail.031312.xyz/", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-		{
-			name: "Push",
-			url: "https://push.031312.xyz/", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
 		},
 	],
