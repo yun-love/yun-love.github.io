@@ -51,6 +51,15 @@ const { remarkPluginFrontmatter } = await entry.render();
         before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
         before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block
         ">
+            {/* --- 修改开始：置顶图标 --- */}
+            {entry.data.pinned && (
+                <Icon 
+                    name="material-symbols:push-pin" 
+                    class="inline-block mr-2 text-[var(--primary)] align-middle text-[1.6rem] mb-1 rotate-45"
+                ></Icon>
+            )}
+            {/* --- 修改结束 --- */}
+            
             {title}
             <Icon class="inline text-[2rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute" name="material-symbols:chevron-right-rounded" ></Icon>
             <Icon class="text-[var(--primary)] text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" name="material-symbols:chevron-right-rounded"></Icon>

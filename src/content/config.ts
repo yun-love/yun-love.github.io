@@ -17,6 +17,7 @@ const postsCollection = defineCollection({
 		prevSlug: z.string().default(""),
 		nextTitle: z.string().default(""),
 		nextSlug: z.string().default(""),
+    pinned: z.boolean().optional().default(false),
 	}),
 });
 const specCollection = defineCollection({
