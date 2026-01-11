@@ -8,7 +8,7 @@ import type {
 import { LinkPreset } from "./types/config";
 
 export const siteConfig: SiteConfig = {
-	title: "Yun-love",
+	title: "YUN-LOVE",
 	subtitle: "一个无人问津的小站",
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
@@ -69,7 +69,7 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "https://openlist.031312.xyz/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "yun-love",
+	name: "YUN-LOVE",
 	bio: "无限进步",
 	links: [
 		// {
