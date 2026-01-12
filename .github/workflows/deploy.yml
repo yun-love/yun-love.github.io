@@ -39,7 +39,7 @@ jobs:
         id: check_post
         shell: python
         run: |
-          import os, re, datetime, subprocess
+          import os, re, subprocess
 
           # 1. 获取变动文件
           cmd = ['git', '-c', 'core.quotepath=false', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD']
@@ -53,7 +53,6 @@ jobs:
 
           target_file = changed_files[0] 
 
-          # 2. 增强提取逻辑
           def extract(pattern, content, default=""):
               match = re.search(pattern, content, re.MULTILINE)
               if match:
@@ -63,49 +62,47 @@ jobs:
 
           with open(target_file, 'r', encoding='utf-8') as f:
               content = f.read()
-              title = extract(r'^title:\s*(.*)', content, "无标题")
-              desc = extract(r'^description:\s*(.*)', content, "点击链接阅读全文...")
-              date = extract(r'^published:\s*(.*)', content, datetime.datetime.now().strftime('%Y-%m-%d'))
+              title = extract(r'^title:\s*(.*)', content, "新博文发布")
+              desc = extract(r'^description:\s*(.*)', content, "点击原文查看详情")
               category = extract(r'^category:\s*(.*)', content, "未分类")
               img = extract(r'^image:\s*(.*)', content, "")
               
               tags_match = re.search(r'^tags:\s*\[(.*)\]', content, re.MULTILINE)
-              tags = " ".join([f"#{t.strip()}" for t in tags_match.group(1).split(',')]) if tags_match else "#日常"
+              tags = " ".join([f"#{t.strip()}" for t in tags_match.group(1).split(',') if t.strip()]) if tags_match else "#博客更新"
 
           with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as env_file:
-              env_file.write(f"POST_TITLE={title}\n")
-              env_file.write(f"POST_DESC={desc}\n")
-              env_file.write(f"POST_DATE={date}\n")
-              env_file.write(f"POST_CATE={category}\n")
-              env_file.write(f"POST_TAGS={tags}\n")
+              # 仅保留 Moepush 模板需要的变量
+              env_file.write(f"POST_TITLE={title.replace('\"', '')}\n")
+              # 构造一个纯净的 description 供 Moepush 模板引用
+              # 包含：摘要、分类、标签
+              rich_desc = f"{desc}\\n\\n---\\n📂 分类：{category}\\n🏷️ 标签：{tags}"
+              env_file.write(f"POST_RICH_DESC={rich_desc.replace('\"', '')}\n")
               env_file.write(f"POST_IMAGE={img}\n")
               env_file.write(f"LATEST_POST_PATH={target_file}\n")
               env_file.write("SHOULD_NOTIFY=true\n")
 
-      - name: Notify Moepush with Rich Style
+      - name: Notify Moepush
         if: success() && env.SHOULD_NOTIFY == 'true'
         run: |
           FILENAME=$(basename "${{ env.LATEST_POST_PATH }}" | cut -d. -f1)
           BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
           
-          # 处理预览图兜底逻辑
+          # 封面图逻辑
           PIC_URL="${{ env.POST_IMAGE }}"
           if [ -z "$PIC_URL" ] || [ "$PIC_URL" == "''" ]; then
-            PIC_URL="https://picsum.photos/seed/${FILENAME}/800/400" # 根据文件名生成的随机图，保证每篇都不一样
+            PIC_URL="https://picsum.photos/seed/${FILENAME}/800/400"
           elif [[ ! $PIC_URL == http* ]]; then
-            PIC_URL="https://blog.031312.xyz$PIC_URL" # 补全相对路径
+            PIC_URL="https://blog.031312.xyz$PIC_URL"
           fi
           
-          # 构造 Markdown 文本 (企业微信支持图片的写法)
-          MARKDOWN_BODY="### 📝 博客新文章发布\n\n**[$POST_TITLE]($BLOG_URL)**\n\n> $POST_DESC\n\n---\n📂 **分类**: $POST_CATE\n🏷️ **标签**: $POST_TAGS\n📅 **发布**: $POST_DATE\n\n![封面图]($PIC_URL)\n\n[点击此处立即阅读全篇内容 >>]($BLOG_URL)"
-
+          # 直接发送， description 使用我们组合好的富文本
           curl -X POST "${{ secrets.MOEPUSH_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
                   \"msgtype\": \"markdown\",
                   \"articles\": {
                     \"title\": \"$POST_TITLE\",
-                    \"description\": \"$MARKDOWN_BODY\",
+                    \"description\": \"$POST_RICH_DESC\",
                     \"url\": \"$BLOG_URL\",
                     \"picurl\": \"$PIC_URL\"
                   }
