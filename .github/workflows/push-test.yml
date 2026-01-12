@@ -1,7 +1,7 @@
 name: Manual Blog Push Test
 
 on:
-  workflow_dispatch: # 开启手动触发按钮
+  workflow_dispatch:
 
 jobs:
   test-push:
@@ -10,29 +10,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 获取完整历史以确保能找到文件
+          fetch-depth: 0 # 必须设为 0，否则拿不到 git log 历史
 
       - name: Extract Post and Push
         run: |
-          # 1. 寻找最新的文章文件 (src/content/posts 目录下)
-          # 注意：根据你的 Fuwari 实际路径调整，如果是 .md 或 .mdx
-          LATEST_POST=$(ls -t src/content/posts/*.{md,mdx} | head -n 1)
-          echo "Found latest post: $LATEST_POST"
+          # 1. 使用 git 寻找最近一次修改的文章路径
+          LATEST_POST=$(git log --name-only --format="" src/content/posts/ | grep -E "\.mdx?$" | head -n 1)
+          
+          echo "Determined latest post by git: $LATEST_POST"
 
-          # 2. 提取 Frontmatter 内容
-          # 提取 title (去掉前面的 title: 和引号)
+          if [ -z "$LATEST_POST" ]; then
+            echo "No post found in git history, falling back to ls."
+            LATEST_POST=$(ls src/content/posts/*.{md,mdx} | sort -r | head -n 1)
+          fi
+
+          # 2. 提取内容 (保持不变)
           TITLE=$(grep '^title:' "$LATEST_POST" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
-          # 提取 description (去掉前面的 description: 和引号)
           DESC=$(grep '^description:' "$LATEST_POST" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
           
-          # 3. 构造 URL (假设你的 URL 结构是 /posts/文件名)
+          # 3. 构造 URL
           FILENAME=$(basename "$LATEST_POST" | cut -d. -f1)
           BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
 
-          echo "Pushing Title: $TITLE"
-
-          # 4. 发送给 Moepush
-          # 使用 Markdown 格式，匹配你 Moepush 后台的 ${body.articles.xxx} 路径
+          # 4. 推送
           curl -X POST "${{ secrets.MOEPUSH_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
