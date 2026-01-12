@@ -1,7 +1,7 @@
 ---
 title: 这是一篇测试文章
 published: 2026-01-12
-description: ''
+description: '用于测试的简介'
 image: ''
 tags: [test]
 category: ''
