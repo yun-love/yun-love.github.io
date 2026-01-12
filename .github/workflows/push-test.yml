@@ -27,7 +27,7 @@ jobs:
           
           # 3. 构造 URL (假设你的 URL 结构是 /posts/文件名)
           FILENAME=$(basename "$LATEST_POST" | cut -d. -f1)
-          BLOG_URL="https://你的博客域名.com/posts/$FILENAME"
+          BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
 
           echo "Pushing Title: $TITLE"
 
