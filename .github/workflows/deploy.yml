@@ -38,29 +38,3 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Notify WeChat via Moepush
-        if: success()
-        run: |
-          # 1. 找到最新修改的 md/mdx 文件
-          LATEST_POST=$(ls -t src/content/posts/*.{md,mdx} | head -n 1)
-          
-          # 2. 提取 Frontmatter 中的标题和描述
-          # 使用 sed 去掉引号和多余空格
-          TITLE=$(grep '^title:' "$LATEST_POST" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
-          DESC=$(grep '^description:' "$LATEST_POST" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
-          
-          # 3. 获取文件名作为 URL 路径（根据 Fuwari 默认路由规则）
-          FILENAME=$(basename "$LATEST_POST" | cut -d. -f1)
-          URL="https://你的博客域名/posts/$FILENAME"
-
-          # 4. 发送请求
-          curl -X POST "${{ secrets.MOEPUSH_URL }}" \
-            -H "Content-Type: application/json" \
-            -d "{
-                  \"msgtype\": \"markdown\",
-                  \"articles\": {
-                    \"title\": \"$TITLE\",
-                    \"description\": \"$DESC\",
-                    \"url\": \"$URL\"
-                  }
-                }"
