@@ -1,10 +1,47 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v4
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 必须设为 0 以获取 Git 历史进行对比
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
       - name: Find Changed Post and Extract Info
         id: check_post
         shell: python
         run: |
           import os, re, datetime, subprocess
 
-          # 1. 直接获取本次提交中【新增或修改】的 posts 文件
+          # 1. 获取本次提交中【新增或修改】的文章文件
           result = subprocess.run(['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD'], capture_output=True, text=True)
           changed_files = [f for f in result.stdout.splitlines() if f.startswith('src/content/posts/') and f.endswith(('.md', '.mdx'))]
 
@@ -14,7 +51,7 @@
                   env_file.write("SHOULD_NOTIFY=false\n")
               exit(0)
 
-          # 2. 如果有多个变动，取其中 published 日期最晚的一个
+          # 2. 如果有多个变动，尝试寻找 published 日期最晚的一个
           date_pattern = re.compile(r'^published:\s*["\']?(\d{4}-\d{2}-\d{2})', re.MULTILINE)
           latest_file = None
           latest_date = None
@@ -22,36 +59,41 @@
           for path in changed_files:
               if os.path.exists(path):
                   with open(path, 'r', encoding='utf-8') as f:
-                      match = date_pattern.search(f.read())
+                      content = f.read()
+                      match = date_pattern.search(content)
                       if match:
                           curr_date = datetime.datetime.strptime(match.group(1), '%Y-%m-%d')
                           if latest_date is None or curr_date > latest_date:
                               latest_date = curr_date
                               latest_file = path
 
-          # 3. 如果没找到 published 字段（比如是草稿），默认取变动列表里的第一个
+          # 3. 如果没找到 published 字段，默认取变动列表里的第一个文件
           if not latest_file:
               latest_file = changed_files[0]
 
-          print(f"✅ Detected new post: {latest_file}")
+          print(f"✅ Detected changed post: {latest_file}")
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f"LATEST_POST_PATH={latest_file}\n")
               env_file.write("SHOULD_NOTIFY=true\n")
 
       - name: Notify Moepush
+        # 只有在构建成功且检测到文章变动时才发送
         if: success() && env.SHOULD_NOTIFY == 'true'
         run: |
           FILE_PATH="${{ env.LATEST_POST_PATH }}"
           
-          # 提取标题和描述
+          # 提取标题和描述 (针对 Fuwari 格式进行 sed 优化)
           TITLE=$(grep '^title:' "$FILE_PATH" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
           DESC=$(grep '^description:' "$FILE_PATH" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
           
+          # 容错处理：如果描述为空，则显示默认文字
           if [ -z "$DESC" ] || [ "$DESC" == "''" ]; then DESC="Fuwari 博客发布了新内容，点击查看详情！"; fi
           
+          # 构造博文 URL
           FILENAME=$(basename "$FILE_PATH" | cut -d. -f1)
           BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
 
+          # 发送 Markdown 推送给 Moepush
           curl -X POST "${{ secrets.MOEPUSH_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
