@@ -10,3 +10,10 @@ lang: ''
 ---
 
 ![这是一张照片](/images/demo-banner.png)
+
+# 这是一篇文章
+ 
+~~~python
+a = 10
+print(a)
+~~~
