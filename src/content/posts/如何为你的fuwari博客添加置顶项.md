@@ -403,3 +403,5 @@ const { remarkPluginFrontmatter } = await entry.render();
 <style define:vars={{coverWidth}}>
 </style>
 ~~~
+
+  
