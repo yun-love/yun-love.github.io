@@ -1,4 +1,4 @@
-name: Manual Blog Push Test
+name: Manual Blog Push Test (Date Based)
 
 on:
   workflow_dispatch:
@@ -9,30 +9,59 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # 必须设为 0，否则拿不到 git log 历史
 
-      - name: Extract Post and Push
+      - name: Find Latest Post by Date
+        id: find_post
+        shell: python
         run: |
-          # 1. 使用 git 寻找最近一次修改的文章路径
-          LATEST_POST=$(git log --name-only --format="" src/content/posts/ | grep -E "\.mdx?$" | head -n 1)
-          
-          echo "Determined latest post by git: $LATEST_POST"
+          import os
+          import re
+          import datetime
 
-          if [ -z "$LATEST_POST" ]; then
-            echo "No post found in git history, falling back to ls."
-            LATEST_POST=$(ls src/content/posts/*.{md,mdx} | sort -r | head -n 1)
-          fi
+          base_dir = "src/content/posts/"
+          latest_date = None
+          latest_file = None
 
-          # 2. 提取内容 (保持不变)
-          TITLE=$(grep '^title:' "$LATEST_POST" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
-          DESC=$(grep '^description:' "$LATEST_POST" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
+          # 匹配 Frontmatter 中的 date: 2026-01-12
+          date_pattern = re.compile(r'^date:\s*["'']?(\d{4}-\d{2}-\d{2})', re.MULTILINE)
+
+          for root, dirs, files in os.walk(base_dir):
+              for file in files:
+                  if file.endswith(('.md', '.mdx')):
+                      path = os.path.join(root, file)
+                      with open(path, 'r', encoding='utf-8') as f:
+                          content = f.read()
+                          match = date_pattern.search(content)
+                          if match:
+                              # 将字符串转为日期进行比较
+                              current_date = datetime.datetime.strptime(match.group(1), '%Y-%m-%d')
+                              if latest_date is None or current_date > latest_date:
+                                  latest_date = current_date
+                                  latest_file = path
+
+          if latest_file:
+              print(f"Found latest post: {latest_file} with date {latest_date.date()}")
+              # 将结果写入 GitHub 环境变量
+              with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+                  env_file.write(f"LATEST_POST_PATH={latest_file}\n")
+          else:
+              print("No post with date found!")
+              exit(1)
+
+      - name: Extract Content and Push
+        run: |
+          # 1. 从环境变量获取路径
+          FILE_PATH="${{ env.LATEST_POST_PATH }}"
           
-          # 3. 构造 URL
-          FILENAME=$(basename "$LATEST_POST" | cut -d. -f1)
+          # 2. 提取标题和描述 (这里根据 Fuwari 格式提取)
+          TITLE=$(grep '^title:' "$FILE_PATH" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
+          DESC=$(grep '^description:' "$FILE_PATH" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
+          
+          # 3. 生成 URL
+          FILENAME=$(basename "$FILE_PATH" | cut -d. -f1)
           BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
 
-          # 4. 推送
+          # 4. 推送至 Moepush
           curl -X POST "${{ secrets.MOEPUSH_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
