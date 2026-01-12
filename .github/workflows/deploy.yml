@@ -2,10 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   # 每次推送到 `main` 分支时触发这个“工作流程”
-  # 如果你使用了别的分支名，请按需将 `main` 替换成你的分支名
   push:
     branches: [ main ]
-  # 允许你在 GitHub 上的 Actions 标签中手动触发此“工作流程”
+  # 允许在 GitHub 上的 Actions 标签中手动触发
   workflow_dispatch:
 
 # 允许 job 克隆 repo 并创建一个 page deployment
@@ -22,10 +21,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Install, build, and upload your site
         uses: withastro/action@v3
-        # with:
-          # path: . # 存储库中 Astro 项目的根位置。（可选）
-          # node-version: 20 # 用于构建站点的特定 Node.js 版本，默认为 20。（可选）
-          # package-manager: pnpm@latest # 应使用哪个 Node.js 包管理器来安装依赖项和构建站点。会根据存储库中的 lockfile 自动检测。（可选）
 
   deploy:
     needs: build
@@ -38,3 +33,70 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      # --- 以下为新增的自动推送逻辑 ---
+
+      - name: Find Latest Post and Check Variation
+        shell: python
+        run: |
+          import os, re, datetime, subprocess
+
+          # 1. [span_0](start_span)设置路径和正则（匹配 published: 2026-01-12）[span_0](end_span)
+          [span_1](start_span)base_dir = "src/content/posts/"[span_1](end_span)
+          [span_2](start_span)latest_date, latest_file = None, None[span_2](end_span)
+          [span_3](start_span)date_pattern = re.compile(r'^published:\s*["\']?(\d{4}-\d{2}-\d{2})', re.MULTILINE)[span_3](end_span)
+
+          # 2. [span_4](start_span)遍历扫描所有文章，找到日期最新的一篇[span_4](end_span)
+          if os.path.exists(base_dir):
+              for root, _, files in os.walk(base_dir):
+                  for file in files:
+                      if file.endswith(('.md', '.mdx')):
+                          path = os.path.join(root, file)
+                          with open(path, 'r', encoding='utf-8') as f:
+                              match = date_pattern.search(f.read())
+                              if match:
+                                  [span_5](start_span)curr_date = datetime.datetime.strptime(match.group(1), '%Y-%m-%d')[span_5](end_span)
+                                  if latest_date is None or curr_date > latest_date:
+                                      [span_6](start_span)latest_date, latest_file = curr_date, path[span_6](end_span)
+
+          # 3. 判断最新文章是否在本次提交中被修改过（防止重复推送旧闻）
+          if latest_file:
+              # 获取本次提交变动的文件列表
+              changed = subprocess.run(['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD'], capture_output=True, text=True).stdout
+              if latest_file in changed:
+                  [span_7](start_span)print(f"Detected changes in latest post: {latest_file}")[span_7](end_span)
+                  with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+                      [span_8](start_span)env_file.write(f"LATEST_POST_PATH={latest_file}\n")[span_8](end_span)
+                      env_file.write("SHOULD_NOTIFY=true\n")
+              else:
+                  print("Latest post not modified in this commit.")
+                  with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+                      env_file.write("SHOULD_NOTIFY=false\n")
+
+      - name: Notify Moepush
+        # 仅在部署成功且检测到最新文章有变动时运行
+        if: success() && env.SHOULD_NOTIFY == 'true'
+        run: |
+          [span_9](start_span)FILE_PATH="${{ env.LATEST_POST_PATH }}"[span_9](end_span)
+          
+          # [span_10](start_span)提取标题和描述（针对 Fuwari 格式优化）[span_10](end_span)
+          [span_11](start_span)TITLE=$(grep '^title:' "$FILE_PATH" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')[span_11](end_span)
+          [span_12](start_span)DESC=$(grep '^description:' "$FILE_PATH" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')[span_12](end_span)
+          
+          # [span_13](start_span)描述为空时的默认值[span_13](end_span)
+          if [ -z "$DESC" ] || [span_14](start_span)[ "$DESC" == "''" ]; then DESC="Fuwari 博客发布了新内容，点击查看详情！"; fi[span_14](end_span)
+          
+          # [span_15](start_span)构造博文 URL[span_15](end_span)
+          [span_16](start_span)FILENAME=$(basename "$FILE_PATH" | cut -d. -f1)[span_16](end_span)
+          [span_17](start_span)BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"[span_17](end_span)
+
+          # [span_18](start_span)发送 Markdown 格式推送给 Moepush[span_18](end_span)
+          curl -X POST "${{ secrets.MOEPUSH_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+                  \"msgtype\": \"markdown\",
+                  \"articles\": {
+                    \"title\": \"$TITLE\",
+                    \"description\": \"$DESC\",
+                    \"url\": \"$BLOG_URL\"
+                  }
+                [span_19](start_span)}"[span_19](end_span)
