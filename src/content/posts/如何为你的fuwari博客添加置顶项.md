@@ -9,7 +9,7 @@ draft: false
 lang: ''
 ---
 
-## 第一步：向 'src/content/config.ts' 中添加一个 pinned 字段
+## 第一步：向 `src/content/config.ts` 中添加一个 pinned 字段
 
 ~~~typescript
 // src/content/config.ts
@@ -68,8 +68,8 @@ async function getRawSortedPosts() {
 ## 第三步：修改 UI 显示 (PostCard.astro)
 
 为了让置顶文章一目了然，我们要在标题旁边加一个“图钉”图标。  
-修改 PostCard.astro，在显示 {title} 的位置前面添加图标判断逻辑。  
-找到代码中 <a href={url} ...> 包含 {title} 的部分，修改如下：
+修改 `PostCard.astro`，在显示 `{title}` 的位置前面添加图标判断逻辑。  
+找到代码中 `<a href={url} ...>` 包含` {title} `的部分，修改如下：`
 ~~~astro
 <!-- src/components/PostCard.astro -->
 
@@ -102,7 +102,7 @@ before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:blo
 ~~~
 ## 第四步：如何使用
 
-现在功能已经做好了，只要在你想要置顶的文章的 Markdown 头部（Frontmatter）添加 pinned: true 即可：
+现在功能已经做好了，只要在你想要置顶的文章的 Markdown 头部（Frontmatter）添加 `pinned: true` 即可：
 ~~~markdown
 ---
 title: 我的置顶文章
@@ -114,14 +114,14 @@ pinned: true
 ~~~
 ## 注意事项
 
-如果 'pnpm build' 报错可以尝试执行
+如果 `pnpm build` 报错可以尝试执行
 ~~~bash
 pnpm add -D @iconify-json/material-symbols
 ~~~
 
 ## 完整文件
 
-**1. src/content/config.ts**
+**`1. src/content/config.ts`**
 ~~~typescript
 import { defineCollection, z } from "astro:content";
 
@@ -153,7 +153,7 @@ export const collections = {
 	spec: specCollection,
 };
 ~~~
-**2. src/utils/content-utils.ts**  
+**`2. src/utils/content-utils.ts`**  
 主要变化：在 getRawSortedPosts 中添加了优先判断 pinned 字段的逻辑  
 ~~~typescript
 import { type CollectionEntry, getCollection } from "astro:content";
@@ -280,8 +280,8 @@ export async function getCategoryList(): Promise<Category[]> {
 	return ret;
 }
 ~~~
-**3. src/components/PostCard.astro**  
-主要变化：在标题区域添加了图钉图标 (material-symbols:push-pin) 的显示逻辑
+**`3. src/components/PostCard.astro`**  
+主要变化：在标题区域添加了图钉图标 `(material-symbols:push-pin)` 的显示逻辑
 ~~~typescript
 ---
 import type { CollectionEntry } from "astro:content";
