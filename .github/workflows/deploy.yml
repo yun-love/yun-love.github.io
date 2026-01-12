@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
+      - name: Checkout your repository
         uses: actions/checkout@v4
       - name: Install, build, and upload your site
         uses: withastro/action@v3
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 必须设为 0 以获取 Git 历史进行对比
+          fetch-depth: 0
 
       - name: Deploy to GitHub Pages
         id: deployment
@@ -41,59 +41,63 @@ jobs:
         run: |
           import os, re, datetime, subprocess
 
-          # 1. 获取本次提交中【新增或修改】的文章文件
-          result = subprocess.run(['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD'], capture_output=True, text=True)
-          changed_files = [f for f in result.stdout.splitlines() if f.startswith('src/content/posts/') and f.endswith(('.md', '.mdx'))]
+          # 1. 强制 Git 不转义中文路径，并获取变动文件
+          # 使用 -c core.quotepath=false 解决 \350\277... 这种乱码问题
+          cmd = ['git', '-c', 'core.quotepath=false', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD']
+          result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
+          
+          # 过滤出文章目录下的 md/mdx 文件
+          changed_files = [f.strip() for f in result.stdout.splitlines() if f.startswith('src/content/posts/') and f.endswith(('.md', '.mdx'))]
 
           if not changed_files:
-              print("No post changes detected in this commit.")
+              print("DEBUG: Git reported changed files: " + result.stdout)
+              print("No post changes detected in src/content/posts/.")
               with open(os.environ['GITHUB_ENV'], 'a') as env_file:
                   env_file.write("SHOULD_NOTIFY=false\n")
               exit(0)
 
-          # 2. 如果有多个变动，尝试寻找 published 日期最晚的一个
+          # 2. 寻找变动文件中 published 日期最晚的一个
           date_pattern = re.compile(r'^published:\s*["\']?(\d{4}-\d{2}-\d{2})', re.MULTILINE)
           latest_file = None
           latest_date = None
 
           for path in changed_files:
               if os.path.exists(path):
-                  with open(path, 'r', encoding='utf-8') as f:
-                      content = f.read()
-                      match = date_pattern.search(content)
-                      if match:
-                          curr_date = datetime.datetime.strptime(match.group(1), '%Y-%m-%d')
-                          if latest_date is None or curr_date > latest_date:
-                              latest_date = curr_date
-                              latest_file = path
+                  try:
+                      with open(path, 'r', encoding='utf-8') as f:
+                          content = f.read()
+                          match = date_pattern.search(content)
+                          if match:
+                              curr_date = datetime.datetime.strptime(match.group(1), '%Y-%m-%d')
+                              if latest_date is None or curr_date > latest_date:
+                                  latest_date = curr_date
+                                  latest_file = path
+                  except Exception as e:
+                      print(f"Error reading {path}: {e}")
 
-          # 3. 如果没找到 published 字段，默认取变动列表里的第一个文件
+          # 3. 兜底逻辑：如果没找到日期，取变动列表第一个
           if not latest_file:
               latest_file = changed_files[0]
 
-          print(f"✅ Detected changed post: {latest_file}")
+          print(f"✅ Found updated post: {latest_file}")
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f"LATEST_POST_PATH={latest_file}\n")
               env_file.write("SHOULD_NOTIFY=true\n")
 
       - name: Notify Moepush
-        # 只有在构建成功且检测到文章变动时才发送
         if: success() && env.SHOULD_NOTIFY == 'true'
         run: |
           FILE_PATH="${{ env.LATEST_POST_PATH }}"
           
-          # 提取标题和描述 (针对 Fuwari 格式进行 sed 优化)
+          # 提取标题和描述，增加对中文内容的引号处理
           TITLE=$(grep '^title:' "$FILE_PATH" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
           DESC=$(grep '^description:' "$FILE_PATH" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
           
-          # 容错处理：如果描述为空，则显示默认文字
           if [ -z "$DESC" ] || [ "$DESC" == "''" ]; then DESC="Fuwari 博客发布了新内容，点击查看详情！"; fi
           
-          # 构造博文 URL
           FILENAME=$(basename "$FILE_PATH" | cut -d. -f1)
           BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
 
-          # 发送 Markdown 推送给 Moepush
           curl -X POST "${{ secrets.MOEPUSH_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
