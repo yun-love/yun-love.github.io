@@ -1,7 +1,7 @@
 name: Manual Blog Push Test (Date Based)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 手动触发按钮
 
 jobs:
   test-push:
@@ -18,50 +18,63 @@ jobs:
           import re
           import datetime
 
+          # 1. 设置路径和正则
           base_dir = "src/content/posts/"
           latest_date = None
           latest_file = None
+          # 匹配 published: 2026-01-12，忽略引号
+          date_pattern = re.compile(r'^published:\s*["\']?(\d{4}-\d{2}-\d{2})', re.MULTILINE)
 
-          # 匹配 Frontmatter 中的 date: 2026-01-12
-          date_pattern = re.compile(r'^date:\s*["'']?(\d{4}-\d{2}-\d{2})', re.MULTILINE)
+          # 2. 遍历扫描
+          if not os.path.exists(base_dir):
+              print(f"❌ 目录不存在: {base_dir}")
+              exit(1)
 
           for root, dirs, files in os.walk(base_dir):
               for file in files:
                   if file.endswith(('.md', '.mdx')):
                       path = os.path.join(root, file)
-                      with open(path, 'r', encoding='utf-8') as f:
-                          content = f.read()
-                          match = date_pattern.search(content)
-                          if match:
-                              # 将字符串转为日期进行比较
-                              current_date = datetime.datetime.strptime(match.group(1), '%Y-%m-%d')
-                              if latest_date is None or current_date > latest_date:
-                                  latest_date = current_date
-                                  latest_file = path
+                      try:
+                          with open(path, 'r', encoding='utf-8') as f:
+                              content = f.read()
+                              match = date_pattern.search(content)
+                              if match:
+                                  date_str = match.group(1)
+                                  current_date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+                                  # 比较日期，留存最新的一篇
+                                  if latest_date is None or current_date > latest_date:
+                                      latest_date = current_date
+                                      latest_file = path
+                      except Exception as e:
+                          print(f"读取文件错误 {path}: {e}")
 
+          # 3. 输出结果
           if latest_file:
-              print(f"Found latest post: {latest_file} with date {latest_date.date()}")
-              # 将结果写入 GitHub 环境变量
+              print(f"✅ 成功找到最新文章: {latest_file} ({latest_date.date()})")
               with open(os.environ['GITHUB_ENV'], 'a') as env_file:
                   env_file.write(f"LATEST_POST_PATH={latest_file}\n")
           else:
-              print("No post with date found!")
+              print(f"❌ 错误：在 {base_dir} 中没找到包含 published 字段的文章！")
               exit(1)
 
       - name: Extract Content and Push
         run: |
-          # 1. 从环境变量获取路径
+          # 1. 获取路径
           FILE_PATH="${{ env.LATEST_POST_PATH }}"
           
-          # 2. 提取标题和描述 (这里根据 Fuwari 格式提取)
+          # 2. 提取标题 (去引号)
           TITLE=$(grep '^title:' "$FILE_PATH" | head -n 1 | sed 's/title: //; s/"//g; s/ '\''//g')
-          DESC=$(grep '^description:' "$FILE_PATH" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
           
-          # 3. 生成 URL
+          # 3. 提取描述 (如果为空则给默认值)
+          DESC=$(grep '^description:' "$FILE_PATH" | head -n 1 | sed 's/description: //; s/"//g; s/ '\''//g')
+          if [ -z "$DESC" ] || [ "$DESC" == "''" ]; then DESC="新文章发布啦，点击下方链接阅读详情！"; fi
+          
+          # 4. 生成 URL (Fuwari 默认将文件名作为 slug)
           FILENAME=$(basename "$FILE_PATH" | cut -d. -f1)
           BLOG_URL="https://blog.031312.xyz/posts/$FILENAME"
 
-          # 4. 推送至 Moepush
+          # 5. 发送请求给 Moepush
+          # 注意：JSON 内部的 $TITLE 等变量需要用双引号包裹并转义
           curl -X POST "${{ secrets.MOEPUSH_URL }}" \
             -H "Content-Type: application/json" \
             -d "{
