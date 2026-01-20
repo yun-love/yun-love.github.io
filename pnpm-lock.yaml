@@ -15,7 +15,7 @@ importers:
         specifier: ^4.0.14
         version: 4.0.14
       '@astrojs/sitemap':
-        specifier: ^3.6.0
+        specifier: ^3.6.1
         version: 3.6.1
       '@astrojs/svelte':
         specifier: 7.2.3
