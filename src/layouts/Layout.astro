@@ -94,6 +94,12 @@ const bannerOffset =
         <meta property="og:type" content="website" />
         )}
 
+        <link rel="canonical" href={`https://blog.031312.xyz${Astro.url.pathname}`} />
+
+{Astro.url.hostname !== 'blog.031312.xyz' && (
+  <meta name="robots" content="noindex, nofollow" />
+)}
+
 		<meta name="twitter:card" content="summary_large_image">
 		<meta property="twitter:url" content={Astro.url}>
 		<meta name="twitter:title" content={pageTitle}>
