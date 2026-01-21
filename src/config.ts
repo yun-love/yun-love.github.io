@@ -49,7 +49,7 @@ export const navBarConfig: NavBarConfig = {
     {
       name: "实验室", // 或者 '项目'
       url: '/lab/',
-      icon: 'material-symbols:AppSettingsAltOutlined', // 推荐一个像“应用”的图标
+      // icon: 'material-symbols:AppSettingsAltOutlined', // 推荐一个像“应用”的图标
       external: false,
     },
 		{
